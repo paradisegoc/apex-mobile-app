@@ -1,21 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as Font from 'expo-font'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import React, { useState } from 'react'
+
+import AppLoading from 'expo-app-loading'
+import MainDrawerNavigator from './navigation/MainDrawerNavigation'
+import { enableScreens } from 'react-native-screens'
+
+//import { applyMiddleware, combineReducers, createStore } from 'redux'
+
+// import { Provider } from 'react-redux'
+// import ReduxThunk from 'redux-thunk'
+// import authReducer from './store/reducer/authReducer'
+// import contactUsReducer from './store/reducer/contactUsReducer'
+
+enableScreens()
+
+// const rootReducer = combineReducers({
+//   excursions: excursionReducer,
+//   auth: authReducer,
+//   contactUsers: contactUsReducer,
+// })
+// const store = createStore(rootReducer, applyMiddleware(ReduxThunk))
+const fetchFonts = () => {
+  return Font.loadAsync({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+  })
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  let x = 1
+  const [fontloaded, setfontloaded] = useState(false)
+
+  if (!fontloaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setfontloaded(true)}
+        onError={console.err}
+      />
+    )
+  }
+  return <MainDrawerNavigator />
+}
