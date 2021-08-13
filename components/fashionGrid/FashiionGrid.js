@@ -4,7 +4,7 @@ import AllStyle from '../../AllStyle'
 import { Avatar } from 'react-native-elements'
 import React from 'react'
 
-const FashionGrid = ({ textColors, title, imgs, onSelect }) => {
+const FashionGrid = ({ textColors, title, onSelect, imgs }) => {
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -20,11 +20,11 @@ const FashionGrid = ({ textColors, title, imgs, onSelect }) => {
         >
           <Avatar
             size='large'
-            //     title='MF'
+            title='MF'
             // rounded
             imageProps={{ resizeMode: 'stretch' }}
             containerStyle={AllStyle.containerStyleAvatar}
-            source={imgs}
+            // source={imgs}
             onPress={onSelect}
             overlayContainerStyle={{ backgroundColor: '#fff' }}
             activeOpacity={0.7}

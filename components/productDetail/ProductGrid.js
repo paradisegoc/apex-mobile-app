@@ -1,3 +1,5 @@
+import * as FileSystem from 'expo-file-system'
+
 import { Avatar, Button, Card, Paragraph, Title } from 'react-native-paper'
 import {
   Dimensions,
@@ -16,7 +18,34 @@ let { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 function ProductGrid({ title, imgs, price, onSelect }) {
   const [rippleColor, setRippleColor] = React.useState(randomHexColor())
   const [rippleOverflow, setRippleOverflow] = React.useState(false)
+  // const [imges, setImage] = React.useState('')
+  // async function getImageToBase64(imageURL) {
+  // let image
+  // const image = await imageURL.blob()
+  // try {
+  //   image = await FileSystem.readAsStringAsync(imageURL, {
+  //     encoding: 'base64',
+  //   })
+  // } catch (error) {
+  //   console.log(error)
+  // }
+  // try {
+  //   const { uri } = await FileSystem.downloadAsync(
+  //     imageURL,
+  //     FileSystem.documentDirectory + 'bufferimg.png'
+  //   )
 
+  //   image = await FileSystem.readAsStringAsync(uri, {
+  //     encoding: 'base64',
+  //   })
+  // } catch (err) {
+  //   console.log(err)
+  // }
+
+  // setImage(image)
+  // }
+  // getImageToBase64(imgs)
+  // console.log('Image is ', imges)
   return (
     <View>
       <Card elevation={15} style={{ marginBottom: 20 }}>

@@ -1,4 +1,4 @@
-// import * as authActions from '../action/userAction'
+import * as authActions from '../../store/action/authAction'
 
 import {
   ActivityIndicator,
@@ -15,11 +15,10 @@ import {
   View,
 } from 'react-native'
 import React, { useCallback, useEffect, useReducer, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Color from '../../colors/Color'
 import Input from './Input'
-
-// import { useDispatch, useSelector } from 'react-redux'
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
 const screenWidth = Dimensions.get('screen').width
@@ -52,9 +51,8 @@ const Login = (props) => {
   LogBox.ignoreLogs(['Setting a timer for a'])
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
-  // SignUp functions
 
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -67,46 +65,46 @@ const Login = (props) => {
     },
     formIsValid: false,
   })
-  // useEffect(() => {
-  //   if (error) {
-  //     Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
-  //   }
-  // }, [error])
-  // const loginHandler = async () => {
-  //   setError(null)
-  //   setIsLoading(true)
-  //   try {
-  //     await dispatch(
-  //       authActions.login(
-  //         formState.inputValues.email,
-  //         formState.inputValues.password
-  //       )
-  //     )
-  //     const userData = await AsyncStorage.getItem('userData')
-  //     const transformedData = JSON.parse(userData)
-  //     const { token, userId, expiryDate } = transformedData
-  //     if (userId === 'VPxsMc7DqKfUOfRpKLq7QrsxIbv2') {
-  //       props.navigation.navigate('AdminScreen')
-  //     } else {
-  //       props.navigation.navigate('appScreen')
-  //     }
-  //   } catch (err) {
-  //     setError(err.message)
-  //     setIsLoading(false)
-  //   }
-  // }
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
+    }
+  }, [error])
+  const loginHandler = async () => {
+    setError(null)
+    setIsLoading(true)
+    try {
+      await dispatch(
+        authActions.login(
+          formState.inputValues.email,
+          formState.inputValues.password
+        )
+      )
+      const userData = await AsyncStorage.getItem('userData')
+      const transformedData = JSON.parse(userData)
+      const { token, userId, expiryDate } = transformedData
+      if (userId === 'VPxsMc7DqKfUOfRpKLq7QrsxIbv2') {
+        props.navigation.navigate('AdminScreen')
+      } else {
+        props.navigation.navigate('appScreen')
+      }
+    } catch (err) {
+      setError(err.message)
+      setIsLoading(false)
+    }
+  }
 
-  // const inputChangeHandler = useCallback(
-  //   (inputIdentifier, inputValue, inputValidity) => {
-  //     dispatchFormState({
-  //       type: FORM_INPUT_UPDATE,
-  //       value: inputValue,
-  //       isValid: inputValidity,
-  //       input: inputIdentifier,
-  //     })
-  //   },
-  //   [dispatchFormState]
-  // )
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier,
+      })
+    },
+    [dispatchFormState]
+  )
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -167,7 +165,7 @@ const Login = (props) => {
                 email
                 autoCapitalize='none'
                 errorText='Please enter a valid email address.'
-                //  onInputChange={inputChangeHandler}
+                onInputChange={inputChangeHandler}
                 initialValue=''
                 style={styles.textInput}
               />
@@ -192,19 +190,17 @@ const Login = (props) => {
                 minLength={5}
                 autoCapitalize='none'
                 errorText='Please enter a valid password.'
-                //  onInputChange={inputChangeHandler}
+                onInputChange={inputChangeHandler}
                 initialValue=''
                 style={styles.textInput}
               />
             </View>
-            {/* {isLoading ? (
+            {isLoading ? (
               <ActivityIndicator size={'large'} color='#f57842' />
             ) : (
               <Text> </Text>
-            )} */}
-            <TouchableOpacity
-            // onPress={loginHandler}
-            >
+            )}
+            <TouchableOpacity onPress={loginHandler}>
               <View style={styles.button_container}>
                 <View style={styles.animation}>
                   <Text style={styles.textLogin}>SignIn</Text>

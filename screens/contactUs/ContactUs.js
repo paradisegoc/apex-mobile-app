@@ -12,42 +12,38 @@ import {
 } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import React, { useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Alert } from 'react-native'
 import AllStyle from '../../AllStyle'
 import HeaderButton from '../../components/headerButton/HeaderButton'
 import HeaderLogo from '../../components/headerLogo/HeaderLogo'
 import SocialMediaIcon from '../../components/socialMediaIcon/SocialMediaIcon'
+import { createContactForm } from '../../store/action/contactAction'
 
-// import { useDispatch, useSelector } from 'react-redux'
-
-// import { createContactForm } from '../../store/action/contactUsAction'
 let { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 const ContactUs = (props) => {
   const [name, setName] = useState('')
-  const [mobile, setPhoneNum] = useState('')
-  const [email, setEmail] = useState('')
+  const [mobile, setMobile] = useState('')
+  // const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 
-  // const dispatch = useDispatch()
-  // const usertoken = useSelector((state) => state.auth.token)
-  // console.log('Contact Us Page userToken ! ', usertoken)
-  // const submitHandler = useCallback(() => {
-  //   if (fname === '' || mobile === '' || email === '' || message === '') {
-  //     Alert.alert('Please enter all input fields')
-  //   } else if (usertoken === null) {
-  //     Alert.alert('Please first SignIn')
-  //     props.navigation.navigate('Login_Screen')
-  //   } else {
-  //     dispatch(createContactForm(fname, mobile, email, message))
-  //     Alert.alert('Message submitted successfully!!')
-  //     setFname('')
-  //     setEmail('')
-  //     setMessage('')
-  //     setMobile('')
-  //   }
-  // }, [dispatch, fname, mobile, email, message])
+  const dispatch = useDispatch()
+  const userEmail = useSelector((state) => state.auth.email)
+  console.log('User Email is: !', userEmail)
+  const submitHandler = useCallback(() => {
+    if (name === '' || mobile === '' || userEmail === '' || message === '') {
+      Alert.alert('Please enter all input fields')
+    } else {
+      dispatch(createContactForm(name, mobile, userEmail, message))
+      Alert.alert('Message submitted successfully!!')
+      setName('')
+
+      setMessage('')
+      setMobile('')
+    }
+  }, [dispatch, name, mobile, userEmail, message])
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -73,7 +69,7 @@ const ContactUs = (props) => {
               borderBottomColor: '#ccc',
               borderBottomWidth: 1,
             }}
-            // value={name}
+            value={name}
             onChangeText={(name) => setName(name)}
             keyboardType='default'
             autoCapitalize='sentences'
@@ -90,8 +86,8 @@ const ContactUs = (props) => {
               borderBottomColor: '#ccc',
               borderBottomWidth: 1,
             }}
-            // value={name}
-            onChangeText={(email) => setEmail(email)}
+            value={userEmail}
+            editable={false}
             keyboardType='default'
             autoCapitalize='sentences'
             autoCorrect
@@ -107,8 +103,8 @@ const ContactUs = (props) => {
               borderBottomColor: '#ccc',
               borderBottomWidth: 1,
             }}
-            // value={name}
-            onChangeText={(phone) => setPhoneNum(phone)}
+            value={mobile}
+            onChangeText={(phone) => setMobile(phone)}
             keyboardType='default'
             autoCapitalize='sentences'
             autoCorrect
@@ -124,7 +120,7 @@ const ContactUs = (props) => {
               borderBottomColor: '#ccc',
               borderBottomWidth: 1,
             }}
-            // value={name}
+            value={message}
             onChangeText={(msg) => setMessage(msg)}
             keyboardType='default'
             autoCapitalize='sentences'
@@ -141,11 +137,7 @@ const ContactUs = (props) => {
             width: screenWidth / 1.1,
           }}
         >
-          <Button
-            title='Submit'
-            color='#0f385a'
-            // onPress={submitHandler}
-          />
+          <Button title='Submit' color='#0f385a' onPress={submitHandler} />
         </View>
 
         <View

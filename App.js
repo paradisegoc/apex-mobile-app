@@ -1,26 +1,23 @@
 import * as Font from 'expo-font'
 
 import React, { useState } from 'react'
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 
 import AppLoading from 'expo-app-loading'
-import MainDrawerNavigator from './navigation/MainDrawerNavigation'
+import NavigationContainer from './navigation/ContainerNavigation'
+import { Provider } from 'react-redux'
+import ReduxThunk from 'redux-thunk'
+import authReducer from './store/reducer/authReducer'
+import contactReducer from './store/reducer/contactReducer'
 import { enableScreens } from 'react-native-screens'
-
-//import { applyMiddleware, combineReducers, createStore } from 'redux'
-
-// import { Provider } from 'react-redux'
-// import ReduxThunk from 'redux-thunk'
-// import authReducer from './store/reducer/authReducer'
-// import contactUsReducer from './store/reducer/contactUsReducer'
 
 enableScreens()
 
-// const rootReducer = combineReducers({
-//   excursions: excursionReducer,
-//   auth: authReducer,
-//   contactUsers: contactUsReducer,
-// })
-// const store = createStore(rootReducer, applyMiddleware(ReduxThunk))
+const rootReducer = combineReducers({
+  contactUsers: contactReducer,
+  auth: authReducer,
+})
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk))
 const fetchFonts = () => {
   return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
@@ -41,5 +38,9 @@ export default function App() {
       />
     )
   }
-  return <MainDrawerNavigator />
+  return (
+    <Provider store={store}>
+      <NavigationContainer />
+    </Provider>
+  )
 }

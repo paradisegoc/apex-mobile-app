@@ -10,26 +10,22 @@ function ProductScreen(props) {
   const prid = props.navigation.getParam('proId')
   const proArray = props.navigation.getParam('proArr')
 
-  const proOuterArray = props.navigation.getParam('outerAray')
-  const products = proOuterArray.find((prod) => prod.id === prid)
-  const productss = products.product
   //   const productsArray = proArray.filter((pro) => pro.id === prid)
-  console.log('Array is :', productss)
-  //console.log('Array is :', proArray)
+  console.log('Array is :', proArray)
 
   const renderItems = (itemData) => {
     return (
       <ProductGrid
         title={itemData.item.title}
-        imgs={itemData.item.img}
+        imgs={itemData.item.image.url}
         price={itemData.item.price}
         onSelect={() => {
           props.navigation.navigate({
             routeName: 'product_Detail',
             params: {
-              proId: itemData.item.id,
-              proTitle: itemData.item.name,
-              productss: productss,
+              proId: itemData.item._id,
+              proTitle: itemData.item.title,
+              productss: proArray,
             },
           })
         }}
@@ -41,8 +37,8 @@ function ProductScreen(props) {
     <View style={{}}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={productss}
-        keyExtractor={(Item) => Item.id.toString()}
+        data={proArray}
+        keyExtractor={(Item) => Item._id}
         renderItem={renderItems}
         // numColumns={1}
       />

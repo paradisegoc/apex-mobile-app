@@ -1,5 +1,3 @@
-// import * as authActions from '../action/userAction'
-
 import {
   Alert,
   Dimensions,
@@ -15,8 +13,8 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react'
 
 import Color from '../../colors/Color'
 import Input from './Input'
-
-// import { useDispatch } from 'react-redux'
+import { signup } from '../../store/action/authAction'
+import { useDispatch } from 'react-redux'
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
 const screenWidth = Dimensions.get('screen').width
@@ -48,7 +46,7 @@ const SignUp = (props) => {
   const [error, setError] = useState()
   // SignUp functions
 
-  //  const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -61,37 +59,34 @@ const SignUp = (props) => {
     },
     formIsValid: false,
   })
-  // useEffect(() => {
-  //   if (error) {
-  //     Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
-  //   }
-  // }, [error])
-  // const signupHandler = async () => {
-  //   setError(null)
-  //   try {
-  //     await dispatch(
-  //       authActions.signup(
-  //         formState.inputValues.email,
-  //         formState.inputValues.password
-  //       )
-  //     )
-  //     props.navigation.navigate('Login_Screen')
-  //   } catch (err) {
-  //     setError(err.message)
-  //   }
-  // }
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
+    }
+  }, [error])
+  const signupHandler = async () => {
+    setError(null)
+    try {
+      await dispatch(
+        signup(formState.inputValues.email, formState.inputValues.password)
+      )
+      props.navigation.navigate('Login_Screen')
+    } catch (err) {
+      setError(err.message)
+    }
+  }
 
-  // const inputChangeHandler = useCallback(
-  //   (inputIdentifier, inputValue, inputValidity) => {
-  //     dispatchFormState({
-  //       type: FORM_INPUT_UPDATE,
-  //       value: inputValue,
-  //       isValid: inputValidity,
-  //       input: inputIdentifier,
-  //     })
-  //   },
-  //   [dispatchFormState]
-  // )
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier,
+      })
+    },
+    [dispatchFormState]
+  )
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -151,7 +146,7 @@ const SignUp = (props) => {
                 required
                 autoCapitalize='none'
                 errorText='Please enter a valid username.'
-                //  onInputChange={inputChangeHandler}
+                onInputChange={inputChangeHandler}
                 initialValue=''
                 style={styles.textInput}
                 id='username'
@@ -175,7 +170,7 @@ const SignUp = (props) => {
                 email
                 autoCapitalize='none'
                 errorText='Please enter a valid email address.'
-                //  onInputChange={inputChangeHandler}
+                onInputChange={inputChangeHandler}
                 initialValue=''
                 style={styles.textInput}
               />
@@ -200,7 +195,7 @@ const SignUp = (props) => {
                 minLength={5}
                 autoCapitalize='none'
                 errorText='Please enter a valid password.'
-                //   onInputChange={inputChangeHandler}
+                onInputChange={inputChangeHandler}
                 initialValue=''
                 style={styles.textInput}
               />
@@ -225,15 +220,13 @@ const SignUp = (props) => {
                 minLength={5}
                 autoCapitalize='none'
                 errorText='Please enter a valid password.'
-                // onInputChange={inputChangeHandler}
+                onInputChange={inputChangeHandler}
                 initialValue=''
                 style={styles.textInput}
               />
             </View>
 
-            <TouchableOpacity
-            // onPress={signupHandler}
-            >
+            <TouchableOpacity onPress={signupHandler}>
               <View style={styles.button_container}>
                 <View style={styles.animation}>
                   <Text style={styles.textLogin}>SignUp</Text>

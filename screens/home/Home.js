@@ -10,6 +10,7 @@ import {
   ManFashionBags,
   ManFashionOuterWear,
 } from '../../data/fashionGridData.js'
+import React, { useEffect, useState } from 'react'
 import {
   WomenFashion,
   WomenFashionBags,
@@ -21,18 +22,32 @@ import HeaderButton from '../../components/headerButton/HeaderButton'
 import HeaderLogo from '../../components/headerLogo/HeaderLogo'
 import HomeFashionTabBar from './HomeFashionTabBar'
 import ManFashions from './ManFashions'
-import React from 'react'
 import { SafeAreaView } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { leatherTanning } from '../../data/leatherTanning'
+import axios from 'axios'
 import { workWear } from '../../data/workWear'
+
+// import { leatherTanning } from '../../data/leatherTanning'
+
 
 let { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 function Home(props) {
   const { navigation } = props
+  const [leatherTanning, setLeatherTanning] = useState()
   LogBox.ignoreLogs([
     'VirtualizedLists should never be nested inside plain ScrollViews',
   ])
+  useEffect(() => {
+    axios
+      .get(`https://apex-leather.herokuapp.com/categories/leather-tanning`)
+      .then((res) => {
+        const leatherAccessories = res.data
+
+        setLeatherTanning([leatherAccessories])
+      })
+    // console.log('category name is:!', leatherTanning.name)
+  }, [])
+
   return (
     <SafeAreaView style={{ flexGrow: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>

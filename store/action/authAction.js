@@ -1,19 +1,20 @@
-import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const LOGOUT = 'LOGOUT'
 
 export const AUTHENTICATE = 'AUTHENTICATE'
 let timer
-export const authenticate = (userId, token, expiryTime) => {
+
+export const authenticate = (email, userId, token, expiryTime) => {
   return (dispatch) => {
     dispatch(setLogoutTimer(expiryTime))
-    dispatch({ type: AUTHENTICATE, userId: userId, token: token })
+    dispatch({ type: AUTHENTICATE, email: email, userId: userId, token: token })
   }
 }
 export const signup = (email, password) => {
   return async (dispatch) => {
     const response = await fetch(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyASI0bBglSw5kt36mFUkBsJKn07QZFRDwk',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB-fZYdTL-5YIrFY9e11Lhk6rDrweqdtYs',
       {
         method: 'POST',
         headers: {
@@ -40,6 +41,7 @@ export const signup = (email, password) => {
     const resData = await response.json()
     dispatch(
       authenticate(
+        resData.email,
         resData.localId,
         resData.idToken,
         parseInt(resData.expiresIn) * 1000
@@ -48,13 +50,18 @@ export const signup = (email, password) => {
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000
     )
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate)
+    saveDataToStorage(
+      resData.idToken,
+      resData.email,
+      resData.localId,
+      expirationDate
+    )
   }
 }
 export const login = (email, password) => {
   return async (dispatch) => {
     const response = await fetch(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyASI0bBglSw5kt36mFUkBsJKn07QZFRDwk',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB-fZYdTL-5YIrFY9e11Lhk6rDrweqdtYs',
       {
         method: 'POST',
         headers: {
@@ -83,6 +90,7 @@ export const login = (email, password) => {
     const resData = await response.json()
     dispatch(
       authenticate(
+        resData.email,
         resData.localId,
         resData.idToken,
         parseInt(resData.expiresIn) * 1000
@@ -92,7 +100,12 @@ export const login = (email, password) => {
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000
     )
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate)
+    saveDataToStorage(
+      resData.idToken,
+      resData.email,
+      resData.localId,
+      expirationDate
+    )
   }
 }
 export const logOut = () => {
@@ -113,10 +126,11 @@ const setLogoutTimer = (expirationTime) => {
   }
 }
 
-const saveDataToStorage = (token, userId, expirationDate) => {
+const saveDataToStorage = (token, email, userId, expirationDate) => {
   AsyncStorage.setItem(
     'userData',
     JSON.stringify({
+      email: email,
       token: token,
       userId: userId,
       expiryDate: expirationDate.toISOString(),

@@ -3,6 +3,7 @@ import { AUTHENTICATE, LOGOUT } from '../action/authAction'
 const initialState = {
   token: null,
   userId: null,
+  email: null,
 }
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -10,6 +11,7 @@ export default (state = initialState, action) => {
       return {
         token: action.token,
         userId: action.userId,
+        email: action.email,
       }
     case LOGOUT:
       return initialState

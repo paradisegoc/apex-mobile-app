@@ -2,16 +2,21 @@ import { DrawerItems, createDrawerNavigator } from 'react-navigation-drawer'
 import { Image, SafeAreaView, StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
+import { useDispatch, useSelector } from 'react-redux'
 
 import AboutStackNavigation from './stackNavigation/AboutStackNavigation'
 import AuthScreenStackNavigation from './stackNavigation/AuthStackNavigation'
+import { Button } from 'react-native-elements'
 import Color from '../colors/Color'
 import ContactUsStackNavigation from './stackNavigation/ContactUsStackNavigation'
+import ContactUserListStackNavigation from './stackNavigation/ContactUserList'
 import FAQStackNavigation from './stackNavigation/FAQStackNavigation'
 import HomeStackNavigation from './stackNavigation/HomeStackNavigation'
 import { Ionicons } from '@expo/vector-icons'
 import { ScrollView } from 'react-native-gesture-handler'
+import StartupScreen from '../screens/startupScreen/StartupScreen'
 import TermandConditionStackNavigation from './stackNavigation/TermandConditionStackNavigation'
+import { logOut } from '../store/action/authAction'
 
 const MainDrawerNavigator = createDrawerNavigator(
   {
@@ -25,16 +30,16 @@ const MainDrawerNavigator = createDrawerNavigator(
         drawerLabel: 'Home',
       },
     },
-    Auth_Screens: {
-      screen: AuthScreenStackNavigation,
-      navigationOptions: {
-        drawerIcon: () => (
-          <Ionicons name='globe' size={25} color={Color.primaryColour} />
-        ),
+    // Auth_Screens: {
+    //   screen: AuthScreenStackNavigation,
+    //   navigationOptions: {
+    //     drawerIcon: () => (
+    //       <Ionicons name='globe' size={25} color={Color.primaryColour} />
+    //     ),
 
-        drawerLabel: 'SignIn',
-      },
-    },
+    //     drawerLabel: 'SignIn',
+    //   },
+    // },
 
     // FeaturePackeges: {
     //   screen: FeaturePackegesStackNavigation,
@@ -59,15 +64,19 @@ const MainDrawerNavigator = createDrawerNavigator(
     //     drawerLabel: 'Chiltern Intro',
     //   },
     // },
-    // ContactUser_List: {
-    //   screen: ContactUserListStackNavigation,
-    //   navigationOptions: {
-    //     drawerIcon: () => (
-    //       <Ionicons name='people-circle' size={29} color='white' />
-    //     ),
-    //     drawerLabel: 'User List',
-    //   },
-    // },
+    ContactUser_List: {
+      screen: ContactUserListStackNavigation,
+      navigationOptions: {
+        drawerIcon: () => (
+          <Ionicons
+            name='people-circle'
+            size={29}
+            color={Color.primaryColour}
+          />
+        ),
+        drawerLabel: 'User List',
+      },
+    },
     About: {
       screen: AboutStackNavigation,
       navigationOptions: {
@@ -118,8 +127,8 @@ const MainDrawerNavigator = createDrawerNavigator(
   },
   {
     contentComponent: (props) => {
-      //   const dispatch = useDispatch()
-      //  const usertoken = useSelector((state) => state.auth.token)
+      const dispatch = useDispatch()
+      const usertoken = useSelector((state) => state.auth.token)
       return (
         <ScrollView showsVerticalScrollIndicator={false}>
           <SafeAreaView
@@ -141,7 +150,7 @@ const MainDrawerNavigator = createDrawerNavigator(
               </View>
             </View>
             <DrawerItems {...props} />
-            {/* {usertoken ? (
+            {usertoken ? (
               <Button
                 title='LogOut'
                 titleStyle={{ color: '#121212' }}
@@ -151,7 +160,7 @@ const MainDrawerNavigator = createDrawerNavigator(
                 }}
                 onPress={() => {
                   dispatch(logOut())
-                  // props.navigation.navigate('Auth')
+                  props.navigation.navigate('Auth')
                 }}
                 icon={<Ionicons name='log-out' size={29} color='#121212' />}
               />
@@ -169,7 +178,7 @@ const MainDrawerNavigator = createDrawerNavigator(
                 }}
                 icon={<Ionicons name='log-out' size={29} color='#121212' />}
               />
-            )} */}
+            )}
           </SafeAreaView>
         </ScrollView>
       )
@@ -192,13 +201,12 @@ const MainDrawerNavigator = createDrawerNavigator(
     },
   }
 )
-// const MainAppNavigation = createSwitchNavigator({
-// //  Startup: StartupScreen,
-
-//   appScreen: MainDrawerNavigator,
-// })
-export default createAppContainer(MainDrawerNavigator)
-// export default createAppContainer(MainDrawerNavigator)
+const MainAppNavigation = createSwitchNavigator({
+  Startup: StartupScreen,
+  Auth: AuthScreenStackNavigation,
+  appScreen: MainDrawerNavigator,
+})
+export default createAppContainer(MainAppNavigation)
 
 const styles = StyleSheet.create({
   icon: {
